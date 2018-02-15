@@ -1,0 +1,70 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Welcome to Number Word Converter";
+}
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<h3>Welcome to Number Word Converter</h3>
+<p>Please provide your name and number</p>
+
+<form id="NumberToWord-form">
+    <div id="dFirstName">
+        <label>Name : </label>
+        <input type ="text" name="FirstName" id="FirstName" value=""/> 
+    </div>
+    <div id = "dNumber">
+        <label>Number</label>
+        <input type="text" name="Number" id="Number" value="" />
+    </div>
+    <input type="button" name="ConvertNumber" id="button1" value="Convert Number to Word" />
+    <div id="label">
+        <label id="lblOutput" name="lblOutput" type="label" hidden>Ouput : </label>    
+        <label id="lblName" name="lblName" type="label" hidden></label>   
+        <label id="lblNumber" name="lblNumber" type="label" hidden></label>    
+    </div>
+</form>
+
+<Script>
+    $(document).ready(function () {
+        $count = 0;
+        $("#button1").click(function() {
+
+            //Get the number entered by user
+            var name = $("#FirstName").val();
+            if (name == "") {
+                alert("Please enter your name");
+                return;
+            }
+
+            //Get the number entered by user
+            var number = $("#Number").val();
+
+            //Check if entered value is Number and not empty
+            if (number == "" || !$.isNumeric(number)) {
+                alert("Please enter valid Number");
+            }
+            else {
+                //Call Web Api to get the result for supplied number
+                $.getJSON("http://localhost:6221/api/NumberToWord/ConvertNumberToWord/" + number + "/",
+                    function (data) {
+                        
+                         $("#lblOutput").show();
+                         $("#lblName").show();
+                         $("#lblName").text($("#FirstName").val());
+                       
+                        if ($count == 0)
+                            $("#lblName").after("<br />");
+
+                        $("#lblNumber").show();
+                        $("#lblNumber").text("\"" + data + "\"");
+                        $count++;
+                    });
+            }
+        });
+    })
+        
+
+</Script>
